@@ -1,40 +1,73 @@
-SOFTWARE DESIGN PATTERNS Assignment #4 Report: Facade Pattern
-Assignment #4 Report: Facade Pattern
-Student Name: Salimzhan Dias | Group: SE-2522
+====================================================================
+                        SOFTWARE DESIGN PATTERNS
+                       Assignment #4 Report: Facade Pattern
+====================================================================
+
+Student Name: Salimjan Dias
+Group: Software Engineering 2522
+Date: 18.10.2026
+
+--------------------------------------------------------------------
 1. INTRODUCTION
-Modern enterprise applications rely on complex subsystems where workflows span multiple services, such as inventory management, payment processing gateways, shipping logistics, and notification dispatchers. If a client application had to directly coordinate, instantiate, and manage exception rollbacks across all these decoupled services, the codebase would become tightly coupled, difficult to maintain, and prone to client-side errors.   
-DOCX
-Ещё 1
-To solve this, we implemented the Facade Structural Design Pattern. The chosen domain is an Online Order Processing System. The OrderFacade wraps four complex subsystem classes (InventoryService, PaymentProcessor, ShippingService, and NotificationService) behind a clean, simplified interface offering methods like placeOrder(cart, customer) and cancelOrder(...). This shields the presentation or client layer from internal subsystem complexity while preserving transactional consistency and error rollback.   
-DOCX
-Ещё 3
-1. UML CLASS DIAGRAM
-[Client / Main] │ (uses) ▼ [OrderFacade] ────────────────────────┐ │ │ ├─► [InventoryService] │ ├─► [PaymentProcessor] │ (Manages Subsystems & ├─► [ShippingService] │ Rollbacks internally) └─► [NotificationService] │ ▼ [Model Classes] (Cart, Customer, Item)
-1. CLEAN CODE PRINCIPLES & JUSTIFICATIONS
+--------------------------------------------------------------------
+Modern enterprise applications rely on complex subsystems where workflows span multiple services, such as inventory management, payment processing gateways, shipping logistics, and notification dispatchers[cite: 1]. If a client application had to directly coordinate, instantiate, and manage exception rollbacks across all these decoupled services, the codebase would become tightly coupled, difficult to maintain, and prone to client-side errors[cite: 1].
+
+To solve this, we implemented the Facade Structural Design Pattern[cite: 1]. The chosen domain is an Online Order Processing System (Option B)[cite: 1]. The OrderFacade wraps four complex subsystem classes (InventoryService, PaymentProcessor, ShippingService, and NotificationService) behind a clean, simplified interface offering methods like placeOrder(cart, customer) and cancelOrder(...)[cite: 1]. This shields the presentation or client layer from internal subsystem complexity while preserving transactional consistency and error rollback[cite: 1].
+
+--------------------------------------------------------------------
+2. UML CLASS DIAGRAM
+--------------------------------------------------------------------
+[Client / Main] 
+       │ (uses)
+       ▼
+[OrderFacade] ────────────────────────┐
+       │                              │
+       ├─► [InventoryService]         │
+       ├─► [PaymentProcessor]         │ (Manages Subsystems & 
+       ├─► [ShippingService]          │  Rollbacks internally)
+       └─► [NotificationService]      │
+                                      ▼
+                             [Model Classes]
+                             (Cart, Customer, Item)
+
+--------------------------------------------------------------------
+3. CLEAN CODE PRINCIPLES & JUSTIFICATIONS
+--------------------------------------------------------------------
+
 Principle 1: Meaningful & Self-Explanatory Naming
-Justification: Class and method names clearly express their domain intent without requiring external documentation. For example, placeOrder() and reserveStock() instantly communicate their responsibilities.   
-DOCX
-Ещё 1
-Code Excerpt: public String placeOrder(Cart cart, Customer customer) { ... }
+- Justification: Class and method names clearly express their domain intent without requiring external documentation[cite: 1]. For example, placeOrder() and reserveStock() instantly communicate their responsibilities[cite: 1].
+- Code Excerpt: 
+  public String placeOrder(Cart cart, Customer customer) { ... }
+
 Principle 2: Single Responsibility Principle (SRP)
-Justification: The Facade class is solely responsible for workflow orchestration and coordination. It does not implement low-level SQL queries, payment gateway encryption, or email socket connections; those reside entirely within their respective subsystem services.   
-DOCX
-Ещё 1
-Code Excerpt: // InventoryService handles inventory state exclusively; OrderFacade only sequences calls. boolean stockReserved = inventoryService.reserveStock(cart);
+- Justification: The Facade class is solely responsible for workflow orchestration and coordination[cite: 1]. It does not implement low-level SQL queries, payment gateway encryption, or email socket connections; those reside entirely within their respective subsystem services[cite: 1].
+- Code Excerpt: 
+  // InventoryService handles inventory state exclusively; OrderFacade only sequences calls.
+  boolean stockReserved = inventoryService.reserveStock(cart);
+
 Principle 3: Encapsulation & No Leaking of Subsystem Details
-Justification: The facade public interface exposes high-level domain objects (Cart, Customer) and strings, hiding low-level technical artifacts (such as raw transaction tokens, database connection handles, or API status codes) from the client.   
-DOCX
-Code Excerpt: // Client only interacts with high-level facade methods: String orderId = orderFacade.placeOrder(cart, customer);
+- Justification: The facade public interface exposes high-level domain objects (Cart, Customer) and strings, hiding low-level technical artifacts (such as raw transaction tokens, database connection handles, or API status codes) from the client[cite: 1].
+- Code Excerpt: 
+  // Client only interacts with high-level facade methods:
+  String orderId = orderFacade.placeOrder(cart, customer);
+
 Principle 4: Small, Focused Subsystem Classes
-Justification: Each subsystem class has a single, well-defined domain responsibility (e.g., ShippingService handles tracking IDs and logistics, while PaymentProcessor handles authorizations).   
-DOCX
-Code Excerpt: public class ShippingService { public String arrangeShipping(Customer customer) { ... } }
+- Justification: Each subsystem class has a single, well-defined domain responsibility (e.g., ShippingService handles tracking IDs and logistics, while PaymentProcessor handles authorizations)[cite: 1].
+- Code Excerpt: 
+  public class ShippingService {
+      public String arrangeShipping(Customer customer) { ... }
+  }
+
 Principle 5: Robust Error Handling and Transaction Rollback
-Justification: Coordination across multiple services requires fault tolerance. If a downstream service (like payment or shipping) fails, the Facade automatically executes compensatory rollback actions across preceding services to maintain data integrity.   
-DOCX
-Ещё 1
-Code Excerpt: if (!paymentSuccess) { inventoryService.releaseStock(cart); return null; }
-1. CONCLUSION
-What the Facade Hides: The Facade hides the internal instantiation order, sequential orchestration logic, exception handling, and compensatory rollback routines required across multiple independent subsystem services.   
-DOCX
-What Remains Accessible: In accordance with the true definition of the Facade pattern, the subsystem classes (InventoryService, PaymentProcessor, ShippingService, NotificationService) remain fully public and decoupled. Advanced clients retain the freedom to instantiate and interact with individual subsystem components directly when custom, low-level operations are required.
+- Justification: Coordination across multiple services requires fault tolerance[cite: 1]. If a downstream service (like payment or shipping) fails, the Facade automatically executes compensatory rollback actions across preceding services to maintain data integrity[cite: 1].
+- Code Excerpt: 
+  if (!paymentSuccess) {
+      inventoryService.releaseStock(cart);
+      return null;
+  }
+
+--------------------------------------------------------------------
+4. CONCLUSION
+--------------------------------------------------------------------
+- What the Facade Hides: The Facade hides the internal instantiation order, sequential orchestration logic, exception handling, and compensatory rollback routines required across multiple independent subsystem services[cite: 1].
+- What Remains Accessible: In accordance with the true definition of the Facade pattern, the subsystem classes (InventoryService, PaymentProcessor, ShippingService, NotificationService) remain fully public and decoupled[cite: 1]. Advanced clients retain the freedom to instantiate and interact with individual subsystem components directly when custom, low-level operations are required[cite: 1].
