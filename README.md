@@ -1,7 +1,6 @@
-====================================================================
-SOFTWARE DESIGN PATTERNS (ShP-2216)
+
+SOFTWARE DESIGN PATTERNS
 Assignment #4 Report: Facade Pattern
-====================================================================
 
 Student Name: Salimzhan Dias
 Group: SE-2522
@@ -69,8 +68,3 @@ Principle 5: Robust Error Handling and Transaction Rollback
 --------------------------------------------------------------------
 - What the Facade Hides: The Facade hides the internal instantiation order, sequential orchestration logic, exception handling, and compensatory rollback routines required across multiple independent subsystem services.
 - What Remains Accessible: In accordance with the true definition of the Facade pattern, the subsystem classes (InventoryService, PaymentProcessor, ShippingService, NotificationService) remain fully public and decoupled. Advanced clients retain the freedom to instantiate and interact with individual subsystem components directly when custom, low-level operations are required.
-
---------------------------------------------------------------------
-5. GITHUB REPOSITORY LINK
---------------------------------------------------------------------
-Repository URL: https://github.com/username/OrderProcessingFacade
